@@ -1,0 +1,1714 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aprendendo a Programar — Sua jornada começa aqui</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #070b14;
+    --surface: #0e1420;
+    --surface2: #161e2e;
+    --surface3: #1c2538;
+    --accent: #3ddc84;
+    --accent2: #ffd166;
+    --accent3: #06b6d4;
+    --python-blue: #306998;
+    --python-yellow: #FFD43B;
+    --text: #e8eef6;
+    --text-muted: #7a8ba0;
+    --text-dim: #4a5568;
+    --border: rgba(61,220,132,0.1);
+    --border-subtle: rgba(255,255,255,0.06);
+    --glow: rgba(61,220,132,0.25);
+    --radius: 14px;
+    --radius-lg: 20px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* ─── CURSOR ─── */
+  .cursor {
+    width: 8px; height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.1s ease, width 0.2s, height 0.2s;
+    mix-blend-mode: screen;
+  }
+  .cursor-ring {
+    width: 32px; height: 32px;
+    border: 1px solid rgba(61,220,132,0.4);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9998;
+    transition: transform 0.35s ease, opacity 0.3s;
+    opacity: 0.6;
+  }
+  .cursor.hovered { transform: scale(3); }
+  .cursor-ring.hovered { transform: scale(1.4); opacity: 0.3; }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.1rem 5%;
+    background: rgba(7,11,20,0.9);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .nav-logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 1rem;
+    color: var(--accent);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    letter-spacing: -0.02em;
+  }
+  .nav-logo span { color: var(--text); }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+    align-items: center;
+  }
+  .nav-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    transition: color 0.2s;
+    cursor: none;
+  }
+  .nav-links a:hover { color: var(--text); }
+
+  .nav-cta {
+    background: var(--accent) !important;
+    color: #070b14 !important;
+    padding: 0.5rem 1.4rem;
+    border-radius: 8px;
+    font-weight: 700 !important;
+    font-size: 0.85rem !important;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .nav-cta:hover {
+    box-shadow: 0 0 24px var(--glow);
+    transform: translateY(-1px);
+    color: #070b14 !important;
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 4rem;
+    padding: 8rem 5% 5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(61,220,132,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(61,220,132,0.025) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+  }
+
+  .hero-glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    pointer-events: none;
+  }
+  .glow-1 { width: 600px; height: 600px; background: rgba(48,105,152,0.18); top: -150px; right: -100px; }
+  .glow-2 { width: 400px; height: 400px; background: rgba(61,220,132,0.08); bottom: 0; left: -100px; }
+
+  .hero-content { position: relative; z-index: 2; }
+
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: rgba(61,220,132,0.07);
+    border: 1px solid rgba(61,220,132,0.18);
+    border-radius: 100px;
+    padding: 0.35rem 1rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    margin-bottom: 2rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .eyebrow-dot {
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.7); }
+  }
+
+  .hero h1 {
+    font-size: clamp(2.8rem, 5.5vw, 5rem);
+    font-weight: 800;
+    line-height: 1.04;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.6rem;
+  }
+  .hero h1 .highlight {
+    color: var(--accent);
+    position: relative;
+  }
+  .hero h1 .highlight::after {
+    content: '';
+    position: absolute;
+    bottom: 2px; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+    border-radius: 1px;
+    opacity: 0.5;
+  }
+
+  .hero-sub {
+    font-size: 1.05rem;
+    color: var(--text-muted);
+    line-height: 1.75;
+    max-width: 520px;
+    margin-bottom: 2.5rem;
+    font-weight: 400;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 3.5rem;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--accent);
+    color: #070b14;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 0.8rem 1.8rem;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: all 0.2s;
+    cursor: none;
+    border: none;
+    letter-spacing: -0.01em;
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px var(--glow);
+  }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: transparent;
+    color: var(--text-muted);
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 0.8rem 1.8rem;
+    border-radius: 10px;
+    text-decoration: none;
+    border: 1px solid var(--border-subtle);
+    transition: all 0.2s;
+    cursor: none;
+  }
+  .btn-secondary:hover {
+    border-color: rgba(61,220,132,0.3);
+    color: var(--text);
+    transform: translateY(-2px);
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 2.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-subtle);
+  }
+  .stat-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.04em;
+  }
+  .stat-accent { color: var(--accent); }
+  .stat-label { font-size: 0.78rem; color: var(--text-dim); margin-top: 0.15rem; letter-spacing: 0.03em; text-transform: uppercase; }
+
+  /* ─── HERO CODE PANEL ─── */
+  .hero-panel { position: relative; z-index: 2; }
+
+  .code-window {
+    background: var(--surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(61,220,132,0.04);
+  }
+
+  .code-titlebar {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.9rem 1.2rem;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot-r { background: #ff5f57; }
+  .dot-y { background: #febc2e; }
+  .dot-g { background: #28c840; }
+  .code-filename {
+    margin-left: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+  }
+
+  .code-body {
+    padding: 1.6rem 1.8rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    line-height: 1.9;
+  }
+  .code-line { display: flex; }
+  .ln { color: var(--text-dim); user-select: none; width: 2rem; flex-shrink: 0; }
+  .kw { color: #c792ea; }
+  .fn { color: #82aaff; }
+  .str { color: #c3e88d; }
+  .num { color: #f78c6c; }
+  .cm { color: #546e7a; font-style: italic; }
+  .var { color: var(--python-yellow); }
+  .punct { color: #89ddff; }
+
+  .code-output {
+    background: rgba(0,0,0,0.3);
+    border-top: 1px solid var(--border-subtle);
+    padding: 1rem 1.8rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .output-prompt { color: var(--text-dim); }
+
+  .tech-chips {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    margin-top: 1.2rem;
+  }
+  .tech-chip {
+    background: var(--surface2);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    padding: 0.35rem 0.8rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+    transition: all 0.2s;
+  }
+  .tech-chip:hover { border-color: rgba(61,220,132,0.25); color: var(--accent); }
+
+  /* ─── SECTION COMMONS ─── */
+  section { padding: 7rem 5%; }
+
+  .section-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--accent);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .section-eyebrow::before { content: '//'; color: var(--text-dim); }
+
+  .section-title {
+    font-size: clamp(1.9rem, 3.5vw, 2.8rem);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    margin-bottom: 0.9rem;
+  }
+  .section-sub {
+    color: var(--text-muted);
+    font-size: 1rem;
+    line-height: 1.75;
+    max-width: 540px;
+    font-weight: 400;
+    margin-bottom: 3.5rem;
+  }
+
+  /* ─── DIVIDER ─── */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-subtle) 30%, var(--border-subtle) 70%, transparent);
+    margin: 0 5%;
+  }
+
+  /* ─── ABOUT ─── */
+  .about-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: 5rem;
+    align-items: center;
+  }
+
+  .about-visual {
+    background: var(--surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .about-visual::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 200px; height: 200px;
+    background: radial-gradient(ellipse at top right, rgba(48,105,152,0.2), transparent 60%);
+  }
+
+  .py-logo-display {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  .py-logo-display .logo-text {
+    font-family: 'Space Mono', monospace;
+    font-size: 3.5rem;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 1;
+  }
+  .py-logo-display .logo-sub {
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-top: 0.5rem;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .feature-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.7rem;
+  }
+  .feature-chip {
+    background: var(--surface2);
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    padding: 0.7rem 0.9rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    transition: all 0.2s;
+    cursor: none;
+    letter-spacing: 0.01em;
+  }
+  .feature-chip:hover { border-color: rgba(61,220,132,0.25); color: var(--text); }
+
+  .why-list { list-style: none; display: flex; flex-direction: column; gap: 1.5rem; }
+  .why-item { display: flex; gap: 1.2rem; align-items: flex-start; }
+  .why-marker {
+    width: 2px;
+    height: 100%;
+    min-height: 50px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+    border-radius: 2px;
+    flex-shrink: 0;
+    margin-top: 0.3rem;
+    opacity: 0.4;
+  }
+  .why-text strong {
+    display: block;
+    font-size: 0.95rem;
+    margin-bottom: 0.3rem;
+    letter-spacing: -0.01em;
+  }
+  .why-text p { color: var(--text-muted); font-size: 0.85rem; line-height: 1.65; font-weight: 400; }
+
+  /* ─── ROADMAP ─── */
+  .roadmap-section { background: var(--surface); }
+
+  .roadmap-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+
+  .roadmap-card {
+    background: var(--bg);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+  .roadmap-card:hover { border-color: rgba(61,220,132,0.2); }
+
+  .roadmap-header {
+    padding: 1.6rem 2rem;
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+  }
+  .roadmap-icon-wrap {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    background: rgba(61,220,132,0.07);
+    border: 1px solid rgba(61,220,132,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+  }
+  .roadmap-title { font-size: 1.1rem; font-weight: 800; letter-spacing: -0.02em; }
+  .roadmap-subtitle { font-size: 0.78rem; color: var(--text-dim); margin-top: 0.2rem; font-weight: 400; }
+
+  .roadmap-steps { padding: 1.8rem 2rem; display: flex; flex-direction: column; gap: 0; }
+
+  .step { display: flex; gap: 1.2rem; align-items: flex-start; position: relative; }
+  .step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 17px; top: 36px; bottom: -18px;
+    width: 1px;
+    background: linear-gradient(to bottom, rgba(61,220,132,0.2), transparent);
+  }
+
+  .step-num {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: var(--surface2);
+    border: 1px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    flex-shrink: 0;
+    margin-bottom: 2rem;
+    transition: all 0.2s;
+  }
+  .roadmap-card:hover .step-num { border-color: rgba(61,220,132,0.3); color: var(--accent); }
+
+  .step-content strong { display: block; font-size: 0.88rem; margin-bottom: 0.25rem; letter-spacing: -0.01em; }
+  .step-content p { color: var(--text-muted); font-size: 0.78rem; line-height: 1.6; font-weight: 400; }
+  .step-duration {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--accent2);
+    margin-top: 0.35rem;
+    opacity: 0.8;
+  }
+
+  /* ─── DOWNLOADS ─── */
+  .downloads-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.2rem;
+  }
+
+  .download-card {
+    background: var(--surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    text-decoration: none;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.25s;
+    cursor: none;
+  }
+  .download-card:hover {
+    border-color: rgba(61,220,132,0.25);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+    background: var(--surface2);
+  }
+  .dl-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+    background: var(--surface2);
+    border: 1px solid var(--border-subtle);
+  }
+  .dl-name { font-weight: 700; font-size: 0.9rem; margin-bottom: 0.15rem; letter-spacing: -0.01em; }
+  .dl-desc { font-size: 0.75rem; color: var(--text-dim); font-weight: 400; line-height: 1.4; }
+  .dl-arrow {
+    margin-left: auto;
+    color: var(--text-dim);
+    font-size: 0.75rem;
+    flex-shrink: 0;
+    transition: transform 0.2s, color 0.2s;
+  }
+  .download-card:hover .dl-arrow { color: var(--accent); transform: translate(2px, -2px); }
+
+  /* ─── VIDEOS ─── */
+  .videos-section { background: var(--surface); }
+
+  .videos-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.2rem;
+  }
+
+  .video-card {
+    background: var(--bg);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    overflow: hidden;
+    text-decoration: none;
+    color: var(--text);
+    transition: all 0.25s;
+    cursor: none;
+    display: block;
+  }
+  .video-card:hover {
+    border-color: rgba(61,220,132,0.2);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.35);
+  }
+
+  .video-thumb {
+    width: 100%;
+    aspect-ratio: 16/9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .video-thumb::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,0.3);
+    transition: background 0.2s;
+  }
+  .video-card:hover .video-thumb::after { background: rgba(0,0,0,0.15); }
+
+  .play-btn {
+    width: 46px; height: 46px;
+    background: rgba(61,220,132,0.9);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #070b14;
+    font-size: 0.95rem;
+    position: relative;
+    z-index: 1;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .video-card:hover .play-btn { transform: scale(1.1); box-shadow: 0 0 24px rgba(61,220,132,0.5); }
+
+  .video-info { padding: 1.1rem 1.3rem; }
+  .video-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+  .video-title { font-size: 0.85rem; font-weight: 700; line-height: 1.45; margin-bottom: 0.4rem; letter-spacing: -0.01em; }
+  .video-meta { font-size: 0.75rem; color: var(--text-dim); font-weight: 400; }
+
+  /* ─── BOOKS ─── */
+  .books-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.2rem;
+  }
+
+  .book-card {
+    background: var(--surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    padding: 1.8rem 1.4rem;
+    text-decoration: none;
+    color: var(--text);
+    transition: all 0.25s;
+    cursor: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    align-items: flex-start;
+    text-align: left;
+  }
+  .book-card:hover {
+    border-color: rgba(255,209,102,0.2);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+    background: var(--surface2);
+  }
+
+  .book-cover {
+    width: 48px; height: 64px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.5);
+    flex-shrink: 0;
+  }
+  .bc1 { background: linear-gradient(150deg, #1a1a2e, #16213e); border: 1px solid rgba(255,212,59,0.3); }
+  .bc2 { background: linear-gradient(150deg, #0d2137, #1a3a5c); border: 1px solid rgba(6,182,212,0.3); }
+  .bc3 { background: linear-gradient(150deg, #0d1f0d, #1a3a1a); border: 1px solid rgba(61,220,132,0.3); }
+  .bc4 { background: linear-gradient(150deg, #1a1200, #2a1e00); border: 1px solid rgba(255,209,102,0.3); }
+
+  .book-title { font-size: 0.88rem; font-weight: 700; line-height: 1.4; letter-spacing: -0.01em; }
+  .book-author { font-size: 0.75rem; color: var(--text-dim); font-weight: 400; }
+  .book-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--accent2);
+    background: rgba(255,209,102,0.07);
+    padding: 0.2rem 0.5rem;
+    border-radius: 5px;
+    border: 1px solid rgba(255,209,102,0.15);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-top: auto;
+  }
+
+  /* ─── TESTIMONIALS ─── */
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.2rem;
+  }
+  .testimonial-card {
+    background: var(--surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    padding: 2rem;
+    position: relative;
+    transition: border-color 0.2s;
+  }
+  .testimonial-card:hover { border-color: rgba(61,220,132,0.2); }
+
+  .quote-mark {
+    font-family: Georgia, serif;
+    font-size: 4rem;
+    color: var(--accent);
+    opacity: 0.12;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+  .testimonial-stars { margin-bottom: 1rem; }
+  .star { color: var(--accent2); font-size: 0.75rem; }
+
+  .testimonial-text { font-size: 0.87rem; line-height: 1.75; color: var(--text-muted); font-weight: 400; margin-bottom: 1.5rem; }
+  .testimonial-author { display: flex; align-items: center; gap: 0.8rem; }
+  .author-avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.75rem;
+    color: #070b14;
+    flex-shrink: 0;
+    font-family: 'Space Mono', monospace;
+  }
+  .a1 { background: var(--accent); }
+  .a2 { background: var(--accent2); }
+  .a3 { background: var(--accent3); }
+
+  .author-name { font-size: 0.85rem; font-weight: 700; letter-spacing: -0.01em; }
+  .author-role { font-size: 0.72rem; color: var(--text-dim); font-weight: 400; }
+
+  /* ─── CTA ─── */
+  .cta-section {
+    background: var(--surface);
+    border-top: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-subtle);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 60% at 50% 100%, rgba(61,220,132,0.05), transparent);
+  }
+  .cta-section > *:not(.cta-glow) { position: relative; z-index: 1; }
+
+  .cta-sub { color: var(--text-muted); font-size: 1rem; margin-bottom: 2.5rem; font-weight: 400; max-width: 460px; margin-left: auto; margin-right: auto; line-height: 1.7; }
+
+  .whatsapp-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    background: #22c55e;
+    color: white;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 0.9rem 2.2rem;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: all 0.2s;
+    box-shadow: 0 8px 32px rgba(34,197,94,0.25);
+    cursor: none;
+    letter-spacing: -0.01em;
+  }
+  .whatsapp-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 48px rgba(34,197,94,0.35);
+    background: #16a34a;
+  }
+
+  .cta-trust {
+    margin-top: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    color: var(--text-dim);
+    font-size: 0.78rem;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .trust-item::before { content: '✓ '; color: var(--accent); }
+
+  /* ─── CONTACT ─── */
+  .contact-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: start;
+  }
+
+  .map-card {
+    background: var(--surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  .map-header {
+    padding: 1.4rem 1.6rem;
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  .map-title { font-size: 0.88rem; font-weight: 700; }
+  .map-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); margin-left: auto; }
+
+  .map-visual {
+    aspect-ratio: 4/3;
+    background: var(--surface2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    color: var(--text-muted);
+    position: relative;
+    overflow: hidden;
+  }
+  .map-visual::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(61,220,132,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(61,220,132,0.03) 1px, transparent 1px);
+    background-size: 30px 30px;
+  }
+  .map-pin-icon { font-size: 2.5rem; position: relative; z-index: 1; }
+  .map-label { font-size: 0.82rem; color: var(--text-muted); text-align: center; position: relative; z-index: 1; line-height: 1.6; }
+  .map-code { color: var(--accent); font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; margin-top: 0.3rem; letter-spacing: 0.08em; }
+
+  .contact-items { display: flex; flex-direction: column; gap: 1rem; }
+  .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.1rem 1.4rem;
+    background: var(--surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    transition: border-color 0.2s;
+  }
+  .contact-item:hover { border-color: rgba(61,220,132,0.2); }
+  .contact-icon-wrap {
+    width: 36px; height: 36px;
+    background: var(--surface2);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+  .contact-label { font-size: 0.72rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.08em; }
+  .contact-val { font-size: 0.88rem; font-weight: 700; margin-top: 0.1rem; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--surface);
+    border-top: 1px solid var(--border-subtle);
+    padding: 4rem 5% 2rem;
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 3rem;
+    padding-bottom: 3rem;
+    margin-bottom: 2.5rem;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .footer-brand p {
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    line-height: 1.75;
+    margin-top: 1rem;
+    max-width: 260px;
+    font-weight: 400;
+  }
+  .footer-col h4 {
+    font-size: 0.78rem;
+    font-weight: 700;
+    margin-bottom: 1.2rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
+  .footer-col a { color: var(--text-dim); text-decoration: none; font-size: 0.82rem; font-weight: 400; transition: color 0.2s; cursor: none; }
+  .footer-col a:hover { color: var(--text); }
+  .footer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .footer-bottom p { color: var(--text-dim); font-size: 0.78rem; font-weight: 400; }
+  .footer-mono { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--border-subtle); }
+
+  /* ─── ANIMATIONS ─── */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .fade-up.visible { opacity: 1; transform: none; }
+
+  /* ─── SCROLLBAR ─── */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border-subtle); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(61,220,132,0.3); }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 1024px) {
+    .downloads-grid,
+    .videos-grid,
+    .books-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 768px) {
+    .hero { grid-template-columns: 1fr; gap: 2rem; padding: 7rem 5% 4rem; }
+    .hero-panel { display: none; }
+    .hero-stats { gap: 1.5rem; flex-wrap: wrap; }
+    .about-layout, .roadmap-grid, .contact-layout { grid-template-columns: 1fr; }
+    .testimonials-grid, .downloads-grid, .videos-grid, .books-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    nav .nav-links { display: none; }
+    .hero h1 { font-size: 2.4rem; }
+    .cta-trust { flex-direction: column; gap: 0.6rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- CUSTOM CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursor-ring"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <span style="color:var(--python-yellow)">{</span>
+    <span style="color:var(--text)">python</span>
+    <span style="color:var(--python-yellow)">}</span>
+    <span style="color:var(--text-dim);font-size:0.75rem;margin-left:0.3rem">aprendendo</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#sobre">Sobre</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#downloads">Downloads</a></li>
+    <li><a href="#videos">Vídeos</a></li>
+    <li><a href="#livros">Livros</a></li>
+    <li><a href="#contato" class="nav-cta">Começar agora →</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow glow-1"></div>
+  <div class="hero-glow glow-2"></div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <span class="eyebrow-dot"></span>
+      Aprendendo a programar · Est. 2024
+    </div>
+    <h1>
+      Aprenda <span class="highlight">Python</span><br>
+      do zero ao<br>
+      profissional
+    </h1>
+    <p class="hero-sub">
+      Comece sua jornada na programação com a linguagem mais popular do mundo.
+      Roadmap completo, recursos gratuitos e uma comunidade pronta para te apoiar.
+    </p>
+    <div class="hero-actions">
+      <a href="#roadmap" class="btn-primary">Ver o Roadmap →</a>
+      <a href="#downloads" class="btn-secondary">↓ Baixar Python</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="stat-num"><span class="stat-accent">100</span>%</div>
+        <div class="stat-label">Gratuito para começar</div>
+      </div>
+      <div>
+        <div class="stat-num">+<span class="stat-accent">50</span>k</div>
+        <div class="stat-label">Alunos na comunidade</div>
+      </div>
+      <div>
+        <div class="stat-num"><span class="stat-accent">#1</span></div>
+        <div class="stat-label">Linguagem mais amada</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CODE WINDOW -->
+  <div class="hero-panel">
+    <div class="code-window">
+      <div class="code-titlebar">
+        <div class="dot dot-r"></div>
+        <div class="dot dot-y"></div>
+        <div class="dot dot-g"></div>
+        <span class="code-filename">hello_world.py</span>
+      </div>
+      <div class="code-body">
+        <div class="code-line"><span class="ln">1</span><span class="cm"># Seu primeiro programa Python</span></div>
+        <div class="code-line"><span class="ln">2</span></div>
+        <div class="code-line"><span class="ln">3</span><span class="kw">def </span><span class="fn">saudacao</span><span class="punct">(</span><span class="var">nome</span><span class="punct">):</span></div>
+        <div class="code-line"><span class="ln">4</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">return</span> <span class="str">f"Olá, <span class="punct">{</span><span class="var">nome</span><span class="punct">}</span>! Bem-vindo!"</span></div>
+        <div class="code-line"><span class="ln">5</span></div>
+        <div class="code-line"><span class="ln">6</span><span class="var">estudantes</span> <span class="punct">= [</span><span class="str">"Ana"</span><span class="punct">,</span> <span class="str">"Bruno"</span><span class="punct">,</span> <span class="str">"Carol"</span><span class="punct">]</span></div>
+        <div class="code-line"><span class="ln">7</span></div>
+        <div class="code-line"><span class="ln">8</span><span class="kw">for</span> <span class="var">aluno</span> <span class="kw">in</span> <span class="var">estudantes</span><span class="punct">:</span></div>
+        <div class="code-line"><span class="ln">9</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">print</span><span class="punct">(</span><span class="fn">saudacao</span><span class="punct">(</span><span class="var">aluno</span><span class="punct">))</span></div>
+      </div>
+      <div class="code-output">
+        <span class="output-prompt">$</span>
+        <span>python hello_world.py</span>
+        <span style="color:var(--accent);margin-left:auto;font-size:0.7rem;">✓ sucesso</span>
+      </div>
+    </div>
+    <div class="tech-chips">
+      <span class="tech-chip">Python 3.12</span>
+      <span class="tech-chip">VS Code</span>
+      <span class="tech-chip">pip</span>
+      <span class="tech-chip">virtualenv</span>
+      <span class="tech-chip">Jupyter</span>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SOBRE -->
+<section id="sobre">
+  <div class="about-layout">
+    <div class="fade-up">
+      <div class="about-visual">
+        <div class="py-logo-display">
+          <div class="logo-text">
+            <span style="color:var(--python-blue)">Py</span><span style="color:var(--python-yellow)">thon</span>
+          </div>
+          <div class="logo-sub">v3.x · A linguagem que muda carreiras</div>
+        </div>
+        <div class="feature-grid">
+          <div class="feature-chip">🤖 Inteligência Artificial</div>
+          <div class="feature-chip">🌐 Desenvolvimento Web</div>
+          <div class="feature-chip">📊 Ciência de Dados</div>
+          <div class="feature-chip">⚙️ Automação</div>
+          <div class="feature-chip">🔒 Cibersegurança</div>
+          <div class="feature-chip">📡 APIs & Backend</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fade-up">
+      <div class="section-eyebrow">Sobre o projeto</div>
+      <h2 class="section-title">Por que aprender <span style="color:var(--accent)">Python</span> agora?</h2>
+      <p class="section-sub">
+        Python não é apenas uma linguagem — é uma porta de entrada para as carreiras mais bem pagas do mercado. Simples de aprender, poderoso o suficiente para criar qualquer coisa.
+      </p>
+      <ul class="why-list">
+        <li class="why-item">
+          <div class="why-marker"></div>
+          <div class="why-text">
+            <strong>Sintaxe simples e legível</strong>
+            <p>Projetado para ser lido quase como inglês. Perfeito para iniciantes que querem avançar rápido sem travar na complexidade da linguagem.</p>
+          </div>
+        </li>
+        <li class="why-item">
+          <div class="why-marker"></div>
+          <div class="why-text">
+            <strong>Salários acima da média</strong>
+            <p>Desenvolvedores Python ganham entre R$5.000 e R$25.000/mês no Brasil. A demanda por profissionais nunca parou de crescer.</p>
+          </div>
+        </li>
+        <li class="why-item">
+          <div class="why-marker"></div>
+          <div class="why-text">
+            <strong>Comunidade global gigante</strong>
+            <p>Milhões de bibliotecas, tutoriais e fóruns. Você nunca vai travar sem encontrar ajuda em segundos.</p>
+          </div>
+        </li>
+        <li class="why-item">
+          <div class="why-marker"></div>
+          <div class="why-text">
+            <strong>O futuro é Python</strong>
+            <p>ChatGPT, TensorFlow, Django — as tecnologias que dominam o mercado são feitas em Python. A linguagem do presente e do futuro.</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ROADMAP -->
+<section class="roadmap-section" id="roadmap">
+  <div class="section-eyebrow">Guia de estudos</div>
+  <h2 class="section-title">Roadmap completo</h2>
+  <p class="section-sub">Siga este caminho do zero ao nível profissional. Cada etapa tem duração estimada para te ajudar a planejar seus estudos.</p>
+
+  <div class="roadmap-grid">
+    <!-- LÓGICA -->
+    <div class="roadmap-card fade-up">
+      <div class="roadmap-header">
+        <div class="roadmap-icon-wrap">🧠</div>
+        <div>
+          <div class="roadmap-title">Lógica de Programação</div>
+          <div class="roadmap-subtitle">Fundamentos essenciais antes de qualquer linguagem</div>
+        </div>
+      </div>
+      <div class="roadmap-steps">
+        <div class="step">
+          <div class="step-num">01</div>
+          <div class="step-content">
+            <strong>Algoritmos e Pseudocódigo</strong>
+            <p>Aprenda a pensar como um programador: sequência, decisão e repetição. Use VisuAlg ou Portugol Studio.</p>
+            <div class="step-duration">⏱ 1–2 semanas</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <div class="step-content">
+            <strong>Variáveis, Tipos e Operadores</strong>
+            <p>Entenda variáveis, tipos de dados (inteiro, real, texto, lógico) e operações aritméticas e lógicas.</p>
+            <div class="step-duration">⏱ 1 semana</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <div class="step-content">
+            <strong>Estruturas de Decisão</strong>
+            <p>If, else, switch — aprenda a criar caminhos diferentes dependendo de condições. Resolva desafios práticos.</p>
+            <div class="step-duration">⏱ 1 semana</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">04</div>
+          <div class="step-content">
+            <strong>Estruturas de Repetição</strong>
+            <p>While, for, do-while. Looping é o coração da programação. Pratique com Fibonacci, fatoriais e mais.</p>
+            <div class="step-duration">⏱ 1–2 semanas</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">05</div>
+          <div class="step-content">
+            <strong>Vetores, Matrizes e Funções</strong>
+            <p>Organize dados em listas e aprenda a criar funções reutilizáveis. A base para todo o resto.</p>
+            <div class="step-duration">⏱ 2 semanas</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">06</div>
+          <div class="step-content">
+            <strong>Fluxogramas e Resolução de Problemas</strong>
+            <p>Visualize a lógica antes de codificar. Pratique com desafios no HackerRank e Beecrowd.</p>
+            <div class="step-duration">⏱ Contínuo</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PYTHON -->
+    <div class="roadmap-card fade-up">
+      <div class="roadmap-header">
+        <div class="roadmap-icon-wrap">🐍</div>
+        <div>
+          <div class="roadmap-title">Python — Do Zero ao Pro</div>
+          <div class="roadmap-subtitle">Linguagem, ferramentas e projetos reais</div>
+        </div>
+      </div>
+      <div class="roadmap-steps">
+        <div class="step">
+          <div class="step-num">01</div>
+          <div class="step-content">
+            <strong>Instalação e Ambiente</strong>
+            <p>Instale Python 3, configure o VS Code, crie seu primeiro "Hello, World!" e entenda pip e ambientes virtuais.</p>
+            <div class="step-duration">⏱ 2–3 dias</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <div class="step-content">
+            <strong>Fundamentos da Linguagem</strong>
+            <p>Variáveis, tipos, listas, dicionários, tuplas, conjuntos. Input/Output, f-strings e operações básicas.</p>
+            <div class="step-duration">⏱ 2–3 semanas</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <div class="step-content">
+            <strong>Controle de Fluxo e Funções</strong>
+            <p>If/elif/else, for, while, funções, parâmetros, retorno, escopo, lambdas e list comprehensions.</p>
+            <div class="step-duration">⏱ 2 semanas</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">04</div>
+          <div class="step-content">
+            <strong>Orientação a Objetos (POO)</strong>
+            <p>Classes, objetos, herança, encapsulamento, polimorfismo. A base para projetos profissionais.</p>
+            <div class="step-duration">⏱ 3 semanas</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">05</div>
+          <div class="step-content">
+            <strong>Módulos, Arquivos e APIs</strong>
+            <p>Trabalhe com arquivos, JSON, requisições HTTP com requests e consumo de APIs externas.</p>
+            <div class="step-duration">⏱ 2 semanas</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">06</div>
+          <div class="step-content">
+            <strong>Projetos e Especialização</strong>
+            <p>Escolha seu caminho: Django/Flask para web, Pandas/NumPy para dados, ou automações com scripts.</p>
+            <div class="step-duration">⏱ Contínuo</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- DOWNLOADS -->
+<section id="downloads">
+  <div class="section-eyebrow">Ferramentas</div>
+  <h2 class="section-title">Baixe o Python e comece</h2>
+  <p class="section-sub">Instale o Python e o editor recomendado no seu sistema. Tudo gratuito e oficial.</p>
+
+  <div class="downloads-grid">
+    <a href="https://www.python.org/downloads/windows/" target="_blank" rel="noopener" class="download-card fade-up">
+      <div class="dl-icon">🪟</div>
+      <div>
+        <div class="dl-name">Python para Windows</div>
+        <div class="dl-desc">Instalador para Windows 10/11 (64-bit)</div>
+      </div>
+      <span class="dl-arrow">↗</span>
+    </a>
+
+    <a href="https://www.python.org/downloads/macos/" target="_blank" rel="noopener" class="download-card fade-up">
+      <div class="dl-icon">🍎</div>
+      <div>
+        <div class="dl-name">Python para macOS</div>
+        <div class="dl-desc">Para macOS 11+ (Intel e Apple Silicon)</div>
+      </div>
+      <span class="dl-arrow">↗</span>
+    </a>
+
+    <a href="https://www.python.org/downloads/source/" target="_blank" rel="noopener" class="download-card fade-up">
+      <div class="dl-icon">🐧</div>
+      <div>
+        <div class="dl-name">Python para Linux</div>
+        <div class="dl-desc">Código-fonte para distribuições Linux</div>
+      </div>
+      <span class="dl-arrow">↗</span>
+    </a>
+
+    <a href="https://code.visualstudio.com/download" target="_blank" rel="noopener" class="download-card fade-up">
+      <div class="dl-icon">💙</div>
+      <div>
+        <div class="dl-name">VS Code</div>
+        <div class="dl-desc">O editor mais usado do mundo. Gratuito.</div>
+      </div>
+      <span class="dl-arrow">↗</span>
+    </a>
+
+    <a href="https://www.anaconda.com/download" target="_blank" rel="noopener" class="download-card fade-up">
+      <div class="dl-icon">📦</div>
+      <div>
+        <div class="dl-name">Anaconda</div>
+        <div class="dl-desc">Para data science: Jupyter, NumPy, Pandas</div>
+      </div>
+      <span class="dl-arrow">↗</span>
+    </a>
+
+    <a href="https://www.jetbrains.com/pycharm/download/" target="_blank" rel="noopener" class="download-card fade-up">
+      <div class="dl-icon">⚡</div>
+      <div>
+        <div class="dl-name">PyCharm Community</div>
+        <div class="dl-desc">IDE completa exclusiva para Python</div>
+      </div>
+      <span class="dl-arrow">↗</span>
+    </a>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- VIDEOS -->
+<section class="videos-section" id="videos">
+  <div class="section-eyebrow">Videoaulas</div>
+  <h2 class="section-title">Aprenda assistindo</h2>
+  <p class="section-sub">Os melhores cursos gratuitos de lógica e Python disponíveis no YouTube, curados pela comunidade.</p>
+
+  <div class="videos-grid">
+    <a href="https://www.youtube.com/watch?v=S9uPNppGsGo" target="_blank" rel="noopener" class="video-card fade-up">
+      <div class="video-thumb" style="background:linear-gradient(135deg,#0d1b5e,#1a2f8a);">
+        <div class="play-btn">▶</div>
+      </div>
+      <div class="video-info">
+        <div class="video-tag">📐 Lógica</div>
+        <div class="video-title">Lógica de Programação para Iniciantes — Gustavo Guanabara</div>
+        <div class="video-meta">CursoemVideo · 40+ aulas · Gratuito</div>
+      </div>
+    </a>
+
+    <a href="https://www.youtube.com/watch?v=S9uPNppGsGo&list=PLHz_AreHm4dlKP6QQCekuIPky1CiwmdI6" target="_blank" rel="noopener" class="video-card fade-up">
+      <div class="video-thumb" style="background:linear-gradient(135deg,#0a2e14,#1a5c2a);">
+        <div class="play-btn">▶</div>
+      </div>
+      <div class="video-info">
+        <div class="video-tag">🐍 Python</div>
+        <div class="video-title">Curso de Python 3 Completo — CursoemVideo</div>
+        <div class="video-meta">Gustavo Guanabara · 115 aulas · Certificado</div>
+      </div>
+    </a>
+
+    <a href="https://www.youtube.com/watch?v=rfscVS0vtbw" target="_blank" rel="noopener" class="video-card fade-up">
+      <div class="video-thumb" style="background:linear-gradient(135deg,#2a0a4a,#4a1575);">
+        <div class="play-btn">▶</div>
+      </div>
+      <div class="video-info">
+        <div class="video-tag">🌐 Inglês</div>
+        <div class="video-title">Learn Python — Full Course for Beginners (freeCodeCamp)</div>
+        <div class="video-meta">freeCodeCamp · 4h30 · Legendas PT</div>
+      </div>
+    </a>
+
+    <a href="https://www.youtube.com/@otaviomiranda" target="_blank" rel="noopener" class="video-card fade-up">
+      <div class="video-thumb" style="background:linear-gradient(135deg,#3a0e05,#7a2010);">
+        <div class="play-btn">▶</div>
+      </div>
+      <div class="video-info">
+        <div class="video-tag">🔥 Projetos</div>
+        <div class="video-title">Python 3 do Básico ao Avançado com Projetos Reais</div>
+        <div class="video-meta">Otávio Miranda · +500k inscritos · Gratuito</div>
+      </div>
+    </a>
+
+    <a href="https://www.youtube.com/@Pythonando" target="_blank" rel="noopener" class="video-card fade-up">
+      <div class="video-thumb" style="background:linear-gradient(135deg,#002a2e,#005560);">
+        <div class="play-btn">▶</div>
+      </div>
+      <div class="video-info">
+        <div class="video-tag">⚡ Backend</div>
+        <div class="video-title">Django com Python — Desenvolvimento Web do Zero</div>
+        <div class="video-meta">Pythonando · Foco em Django · Gratuito</div>
+      </div>
+    </a>
+
+    <a href="https://www.youtube.com/@HashtagProgramacao" target="_blank" rel="noopener" class="video-card fade-up">
+      <div class="video-thumb" style="background:linear-gradient(135deg,#05102e,#0c1f60);">
+        <div class="play-btn">▶</div>
+      </div>
+      <div class="video-info">
+        <div class="video-tag">📊 Data Science</div>
+        <div class="video-title">Python para Análise de Dados com Pandas</div>
+        <div class="video-meta">Hashtag Programação · +1M inscritos · Gratuito</div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- LIVROS -->
+<section id="livros">
+  <div class="section-eyebrow">Livros & PDFs</div>
+  <h2 class="section-title">Leitura que transforma</h2>
+  <p class="section-sub">Livros gratuitos e de referência para aprofundar seu conhecimento. Do básico ao avançado.</p>
+
+  <div class="books-grid">
+    <a href="https://penseallen.github.io/PensePython2e/" target="_blank" rel="noopener" class="book-card fade-up">
+      <div class="book-cover bc1">📘</div>
+      <div class="book-title">Pense em Python</div>
+      <div class="book-author">Allen Downey · Traduzido PT-BR</div>
+      <div class="book-badge">Gratuito PDF</div>
+    </a>
+
+    <a href="https://automatetheboringstuff.com/" target="_blank" rel="noopener" class="book-card fade-up">
+      <div class="book-cover bc2">🤖</div>
+      <div class="book-title">Automate the Boring Stuff with Python</div>
+      <div class="book-author">Al Sweigart · Gratuito online</div>
+      <div class="book-badge">Gratuito PDF</div>
+    </a>
+
+    <a href="https://archive.org/details/algoritmos-e-logica-de-programacao-furlan-de-souza" target="_blank" rel="noopener" class="book-card fade-up">
+      <div class="book-cover bc3">🧠</div>
+      <div class="book-title">Algoritmos e Lógica de Programação</div>
+      <div class="book-author">Marco A. Furlan de Souza · Cengage</div>
+      <div class="book-badge">Gratuito PDF</div>
+    </a>
+
+    <a href="https://www.oreilly.com/library/view/fluent-python-2nd/9781492056348/" target="_blank" rel="noopener" class="book-card fade-up">
+      <div class="book-cover bc4">📗</div>
+      <div class="book-title">Python Fluente</div>
+      <div class="book-author">Luciano Ramalho · O'Reilly</div>
+      <div class="book-badge">Avançado</div>
+    </a>
+
+    <a href="https://learnpythonthehardway.org/" target="_blank" rel="noopener" class="book-card fade-up">
+      <div class="book-cover bc1">💪</div>
+      <div class="book-title">Learn Python the Hard Way</div>
+      <div class="book-author">Zed A. Shaw · Inglês</div>
+      <div class="book-badge">Exercícios</div>
+    </a>
+
+    <a href="https://realpython.com/" target="_blank" rel="noopener" class="book-card fade-up">
+      <div class="book-cover bc3">🌐</div>
+      <div class="book-title">Real Python Tutorials</div>
+      <div class="book-author">Real Python Team · Online</div>
+      <div class="book-badge">Tutoriais</div>
+    </a>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- DEPOIMENTOS -->
+<section>
+  <div class="section-eyebrow">Comunidade</div>
+  <h2 class="section-title">Quem já transformou a carreira</h2>
+  <p class="section-sub">Histórias reais de quem começou do zero e chegou ao mercado de trabalho.</p>
+
+  <div class="testimonials-grid">
+    <div class="testimonial-card fade-up">
+      <span class="quote-mark">"</span>
+      <div class="testimonial-stars">
+        <span class="star">★★★★★</span>
+      </div>
+      <p class="testimonial-text">
+        Fui caixa de supermercado por 8 anos. Encontrei esse roadmap, segui passo a passo e em 14 meses estava trabalhando como analista de dados. Python mudou minha vida.
+      </p>
+      <div class="testimonial-author">
+        <div class="author-avatar a1">AM</div>
+        <div>
+          <div class="author-name">Ana Maria S.</div>
+          <div class="author-role">Analista de Dados · São Paulo, SP</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testimonial-card fade-up">
+      <span class="quote-mark">"</span>
+      <div class="testimonial-stars">
+        <span class="star">★★★★★</span>
+      </div>
+      <p class="testimonial-text">
+        Os vídeos indicados aqui são os melhores que encontrei. Assisti o Guanabara do zero, pratiquei os projetos e em poucos meses tive minha primeira vaga como junior.
+      </p>
+      <div class="testimonial-author">
+        <div class="author-avatar a2">BR</div>
+        <div>
+          <div class="author-name">Bruno Rodrigues</div>
+          <div class="author-role">Desenvolvedor Junior · Curitiba, PR</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testimonial-card fade-up">
+      <span class="quote-mark">"</span>
+      <div class="testimonial-stars">
+        <span class="star">★★★★★</span>
+      </div>
+      <p class="testimonial-text">
+        Tinha 45 anos e achei que era tarde demais para programar. O roadmap de lógica me deu a base que precisava. Hoje faço automações na minha empresa.
+      </p>
+      <div class="testimonial-author">
+        <div class="author-avatar a3">CT</div>
+        <div>
+          <div class="author-name">Claudia Torres</div>
+          <div class="author-role">Analista de TI · Belo Horizonte, MG</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contato" style="padding:7rem 5%;">
+  <div class="cta-glow"></div>
+  <div class="section-eyebrow" style="justify-content:center;">Próximo passo</div>
+  <h2 class="section-title">Pronto para começar<br>sua jornada?</h2>
+  <p class="cta-sub">
+    Entre na nossa comunidade gratuita no WhatsApp e tire dúvidas com outros estudantes e mentores todos os dias.
+  </p>
+  <a href="https://wa.me/5511999999999?text=Olá!%20Quero%20aprender%20Python%20e%20programação" target="_blank" rel="noopener" class="whatsapp-btn">
+    💬 Entrar na comunidade gratuita
+  </a>
+  <div class="cta-trust">
+    <span class="trust-item">Gratuito</span>
+    <span class="trust-item">Sem spam</span>
+    <span class="trust-item">+5.000 membros ativos</span>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CONTATO -->
+<section>
+  <div class="contact-layout">
+    <div>
+      <div class="section-eyebrow">Onde estamos</div>
+      <h2 class="section-title">Comunidade online,<br>impacto real</h2>
+      <p class="section-sub">
+        Somos 100% online, mas nossos alunos estão em todo o Brasil. Encontros virtuais semanais, mentorias e hackathons.
+      </p>
+      <div class="contact-items">
+        <div class="contact-item">
+          <div class="contact-icon-wrap">📍</div>
+          <div>
+            <div class="contact-label">Localização</div>
+            <div class="contact-val">Brasil — 100% Online</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon-wrap">📧</div>
+          <div>
+            <div class="contact-label">E-mail</div>
+            <div class="contact-val">contato@aprendendoaprogramar.com.br</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon-wrap">💬</div>
+          <div>
+            <div class="contact-label">WhatsApp Comunidade</div>
+            <div class="contact-val">+55 (11) 99999-9999</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon-wrap">🌐</div>
+          <div>
+            <div class="contact-label">Redes Sociais</div>
+            <div class="contact-val">@aprendendoaprogramar</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="map-card fade-up">
+      <div class="map-header">
+        <span style="font-size:0.82rem;font-weight:700;color:var(--text-muted)">🗺️</span>
+        <span class="map-title">Comunidade Nacional</span>
+        <div class="map-dot"></div>
+      </div>
+      <div class="map-visual">
+        <div class="map-pin-icon">📍</div>
+        <div class="map-label">
+          Alunos em todos os<br>estados do Brasil
+          <div class="map-code">python.org.br</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="#" class="nav-logo" style="font-size:1.05rem;text-decoration:none;display:inline-flex;">
+        <span style="color:var(--python-yellow)">{</span>
+        <span style="color:var(--text)">Aprendendo a</span>
+        <span style="color:var(--accent)">&nbsp;Programar</span>
+        <span style="color:var(--python-yellow)">}</span>
+      </a>
+      <p>Transformando vidas através da programação. Do zero ao mercado de trabalho, com recursos gratuitos e comunidade ativa.</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Conteúdo</h4>
+      <ul>
+        <li><a href="#roadmap">Roadmap Lógica</a></li>
+        <li><a href="#roadmap">Roadmap Python</a></li>
+        <li><a href="#videos">Videoaulas</a></li>
+        <li><a href="#livros">Livros PDF</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Downloads</h4>
+      <ul>
+        <li><a href="https://python.org/downloads" target="_blank" rel="noopener">Python Windows</a></li>
+        <li><a href="https://python.org/downloads" target="_blank" rel="noopener">Python macOS</a></li>
+        <li><a href="https://code.visualstudio.com" target="_blank" rel="noopener">VS Code</a></li>
+        <li><a href="https://anaconda.com" target="_blank" rel="noopener">Anaconda</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Comunidade</h4>
+      <ul>
+        <li><a href="#">WhatsApp</a></li>
+        <li><a href="#">Discord</a></li>
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">YouTube</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>© 2024 <span style="color:var(--accent)">Aprendendo a Programar</span>. Feito com ❤️ e muito Python 🐍</p>
+    <span class="footer-mono">print("Hello, World! 🌍")</span>
+  </div>
+</footer>
+
+<script>
+  // ─── CURSOR ───
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursor-ring');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = (mx - 4) + 'px';
+    cursor.style.top = (my - 4) + 'px';
+  });
+
+  (function animRing() {
+    rx += (mx - rx) * 0.11;
+    ry += (my - ry) * 0.11;
+    ring.style.left = (rx - 16) + 'px';
+    ring.style.top = (ry - 16) + 'px';
+    requestAnimationFrame(animRing);
+  })();
+
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => { cursor.classList.add('hovered'); ring.classList.add('hovered'); });
+    el.addEventListener('mouseleave', () => { cursor.classList.remove('hovered'); ring.classList.remove('hovered'); });
+  });
+
+  // ─── SCROLL ANIMATIONS ───
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+      }
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // ─── SMOOTH NAV ───
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+</script>
+</body>
+</html>
